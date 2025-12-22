@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="active" id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="inscription.html">Inscription</a></li>
+                <li><a href="connexion.html">Connexion</a></li>
+            </ul>
+            <button class="icon" id="toggle">
+                <div class="line line1"></div>
+                <div class="line line2"></div>
+            </button>
+        </nav>
+    </header>
+
+    <div class="form">
+        <h1>Inscription</h1>
+        <form id="formInscription">
+            <div class="champ">
+                <label for="nom">Nom *</label>
+                <input type="text" id="nom" name="nom" required>
+                <div class="message-erreur" id="erreur-nom"></div>
+            </div>
+
+            <div class="champ">
+                <label for="prenom">Prénom *</label>
+                <input type="text" id="prenom" name="prenom" required>
+                <div class="message-erreur" id="erreur-prenom"></div>
+            </div>
+
+            <div class="champ">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="message-erreur" id="erreur-email"></div>
+            </div>
+
+            <div class="champ">
+                <label for="mdp">Mot de passe *</label>
+                <input type="password" id="mdp" name="motdepasse" required>
+                <div class="message-erreur" id="erreur-mdp"></div>
+            </div>
+
+            <div class="champ">
+                <label for="adresse">Adresse *</label>
+                <input type="text" id="adresse" name="adresse" required>
+                <div class="message-erreur" id="erreur-adresse"></div>
+            </div>
+
+            <div class="champ">
+                <label for="codepostal">Code postal *</label>
+                <input type="text" id="codepostal" name="codepostal" required>
+                <div class="message-erreur" id="erreur-codepostal"></div>
+            </div>
+
+            <button type="submit">S'inscrire</button>
+        </form>
+        <div class="lien">
+            <p>Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+        </div>
+    </div>
+
+
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,3 @@
-// script.js Compteur 
 let compteur = 0;
 
 function incrementer() {

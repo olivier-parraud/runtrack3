@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="active" id="nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="inscription.html">Inscription</a></li>
+                <li><a href="connexion.html">Connexion</a></li>
+            </ul>
+            <button class="icon" id="toggle">
+                <div class="line line1"></div>
+                <div class="line line2"></div>
+            </button>
+        </nav>
+    </header>
+
+    <div class="form">
+        <h1>Connexion</h1>
+        <form id="formConnexion">
+            <div class="champ">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="message-erreur" id="erreur-email"></div>
+            </div>
+
+            <div class="champ">
+                <label for="mdp">Mot de passe *</label>
+                <input type="password" id="mdp" name="motdepasse" required>
+                <div class="message-erreur" id="erreur-mdp"></div>
+            </div>
+
+            <button type="submit">Se connecter</button>
+        </form>
+        <div class="lien">
+            <p>Pas encore de compte ? <a href="inscription.html">S'inscrire</a></p>
+        </div>
+    </div>
+
+
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

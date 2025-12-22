@@ -1,14 +1,14 @@
-const key = document.getElementById("keylogger");
+const textarea = document.getElementById('keylogger');
 
-function hacker(e) {
+document.addEventListener('keydown', (e) => {
+    if (/^[a-z]$/i.test(e.key)) {
+        const key = e.keylog.toLowerCase();
 
-    e.preventDefault();
-
-    console.log(e.key);
-  if (document.activeElement.id === 'keylogger') {
-    key.value =  key.value + e.key + e.key;
-  } else {
-    key.value =  key.value + e.key;
-  }
-}
-window.addEventListener('keydown', (e)=> hacker(e)); 
+        if (document.activeElement === textarea) {
+            e.preventDefault();
+            textarea.value += keylog + keylog;
+        } else {
+            textarea.value += keylog;
+        }
+    }
+});

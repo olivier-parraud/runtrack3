@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>job02</title>
+    <title>Apparition & Disparition</title>
 </head>
+
 <body>
 
-<article id=text>L'important n'est pas la chute, mais l'atterrissage </article>
-<button onclick="showhide()">Afficher/Masquer</button>
-<script src="./script.js"></script>
+    <button onclick="showhide()" id="button">Cliquez</button>
+    <article id="text">L'important n'est pas la chute, mais l'atterrissage.</article>
+
+    <script src="./script.js"></script>
 </body>
+
 </html>

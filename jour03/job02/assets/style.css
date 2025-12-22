@@ -1,0 +1,52 @@
+.tapis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+ .zone {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    border: 1px solid black;
+}
+
+.piece {
+    width: 80px;
+    cursor: grab;
+}
+
+.slot {
+    width: 90px;
+    height: 270px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+button {
+    display: block;
+    margin: 24px auto;
+    padding: 10px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: radial-gradient(circle,rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s;
+}
+button:hover {
+    background: radial-gradient(circle,rgba(161, 90, 119, 1) 0%, rgba(72, 124, 184, 1) 100%);
+}
+
+#result {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

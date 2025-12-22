@@ -1,15 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>job03</title>
+    <title>Compteur</title>
+
 </head>
+
 <body>
 
-<button id ="button"> clique </button>
-<p id = compteur>0</p>
+    <p id="compteur">0</p>
+    <button id="button">Cliquez</button>
 
-<script src="./script.js"></script>
+
+
+    <script src="./script.js"></script>
 </body>
+
 </html>
