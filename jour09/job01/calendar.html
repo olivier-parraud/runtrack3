@@ -26,7 +26,7 @@
                         <span class="navbar-text text-white me-3" id="userInfo"></span>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light btn-sm me-2" href="login.html" id="loginBtn">Connexion</a>
+                        <a class="btn btn-outline-light btn-sm me-2" href="index.html" id="loginBtn">Connexion</a>
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-outline-light btn-sm" id="logoutBtn"
@@ -61,13 +61,14 @@
                             <input type="date" class="form-control" id="eventStartDate" required>
                         </div>
                         <div class="mb-3">
-                            <label for="eventStartTime" class="form-label">Heure de début</label>
-                            <input type="time" class="form-control" id="eventStartTime" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="eventEndDate" class="form-label">Date de fin</label>
                             <input type="date" class="form-control" id="eventEndDate" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="eventStartTime" class="form-label">Heure de début</label>
+                            <input type="time" class="form-control" id="eventStartTime" required>
+                        </div>
+                        
                         <div class="mb-3">
                             <label for="eventEndTime" class="form-label">Heure de fin</label>
                             <input type="time" class="form-control" id="eventEndTime" required>
@@ -77,6 +78,44 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="button" class="btn btn-primary" id="saveEvent">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour voir les détails d'un événement -->
+    <div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="eventDetailModalLabel">Détails de l'événement</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <strong>Titre :</strong>
+                        <p id="detailTitle" class="mb-2"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Date de début :</strong>
+                        <p id="detailStartDate" class="mb-2"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Heure de début :</strong>
+                        <p id="detailStartTime" class="mb-2"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Date de fin :</strong>
+                        <p id="detailEndDate" class="mb-2"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Heure de fin :</strong>
+                        <p id="detailEndTime" class="mb-2"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-danger" id="deleteEvent">Supprimer</button>
                 </div>
             </div>
         </div>

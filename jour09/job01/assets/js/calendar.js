@@ -4,12 +4,14 @@ const user = JSON.parse(sessionStorage.getItem("currentUser"));
 // Initialisation du calendrier
 let calendar;
 let eventModal;
+let eventDetailModal;
 let selectedInfo = null;
+let currentEvent = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Protection d'une page - vérifier après le chargement du DOM
     if (!user) {
-        window.location.href = "login.html";
+        window.location.href = "index.html";
         return;
     }
 
@@ -28,13 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
     logoutBtn.addEventListener('click', function() {
         if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
             sessionStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         }
     });
     const calendarEl = document.getElementById('calendar');
     
-    // Initialisation du modal Bootstrap
+    // Initialisation des modals Bootstrap
     eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    eventDetailModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
     
     // Configuration du calendrier
     calendar = new FullCalendar.Calendar(calendarEl, {
@@ -65,10 +68,25 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         // Quand on clique sur un événement existant
         eventClick: function(info) {
-            if(confirm('Voulez-vous supprimer cet événement ?')) {
-                info.event.remove();
-                saveEventsToStorage();
-            }
+            currentEvent = info.event;
+            
+            // Remplir les détails dans le modal
+            document.getElementById('detailTitle').textContent = info.event.title;
+            
+            const startDate = info.event.start;
+            const endDate = info.event.end || info.event.start;
+            
+            // Formater les dates
+            const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+            const optionsTime = { hour: '2-digit', minute: '2-digit' };
+            
+            document.getElementById('detailStartDate').textContent = startDate.toLocaleDateString('fr-FR', optionsDate);
+            document.getElementById('detailStartTime').textContent = startDate.toLocaleTimeString('fr-FR', optionsTime);
+            document.getElementById('detailEndDate').textContent = endDate.toLocaleDateString('fr-FR', optionsDate);
+            document.getElementById('detailEndTime').textContent = endDate.toLocaleTimeString('fr-FR', optionsTime);
+            
+            // Ouvrir le modal
+            eventDetailModal.show();
         },
         editable: true,
         eventDrop: function(info) {
@@ -119,6 +137,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             alert('Veuillez remplir tous les champs');
+        }
+    });
+    
+    // Gestion de la suppression de l'événement depuis le modal de détails
+    document.getElementById('deleteEvent').addEventListener('click', function() {
+        if(currentEvent && confirm('Voulez-vous vraiment supprimer cet événement ?')) {
+            currentEvent.remove();
+            saveEventsToStorage();
+            eventDetailModal.hide();
+            currentEvent = null;
         }
     });
 });

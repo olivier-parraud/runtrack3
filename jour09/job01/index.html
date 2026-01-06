@@ -26,10 +26,7 @@
                                         <li class="nav-item">
                                                 <span class="navbar-text text-white me-3" id="userInfo"></span>
                                         </li>
-                                        <li class="nav-item">
-                                                <a class="btn btn-outline-light btn-sm me-2" href="calendar.html"
-                                                        id="calendarBtn">Calendrier</a>
-                                        </li>
+        
                                         <li class="nav-item">
                                                 <button class="btn btn-outline-light btn-sm" id="logoutBtn"
                                                         style="display: none;">Déconnexion</button>
@@ -42,45 +39,11 @@
         <div class="content-wrapper">
                 <h1 class="main-title">La Plateforme</h1>
 
-                <div class="auth-container">
-                        <!-- Carte Inscription à gauche -->
-                        <div class="auth-card">
-                                <h2>Inscription</h2>
-                                <p>Créez votre compte pour accéder à la plateforme</p>
+                <div class="auth-container" style="max-width: 420px; justify-content: center;">
 
-                                <form method="POST" id="register-form">
-                                        <div class="mb-4">
-                                                <label for="register-prenom" class="form-label">Prénom</label>
-                                                <input type="text" id="register-prenom" name="prenom"
-                                                        class="form-control" placeholder="Votre prénom" required>
-                                        </div>
-
-                                        <div class="mb-4">
-                                                <label for="register-nom" class="form-label">Nom</label>
-                                                <input type="text" id="register-nom" name="nom" class="form-control"
-                                                        placeholder="Votre nom" required>
-                                        </div>
-
-                                        <div class="mb-4">
-                                                <label for="register-email" class="form-label">Email</label>
-                                                <input type="email" id="register-email" name="email"
-                                                        class="form-control" placeholder="exemple@email.com" required>
-                                        </div>
-
-                                        <div class="mb-4">
-                                                <label for="register-password" class="form-label">Mot de passe</label>
-                                                <input type="password" id="register-password" name="password"
-                                                        class="form-control" placeholder="••••••••" required>
-                                        </div>
-
-                                        <button type="submit" class="btn-auth btn-secondary-auth">
-                                                Créer mon compte
-                                        </button>
-                                </form>
-                        </div>
 
                         <!-- Carte Connexion à droite -->
-                        <div class="auth-card">
+                        <div class="auth-card" style="padding: 40px 35px;">
                                 <h2>Connexion</h2>
                                 <p>Connectez-vous à votre compte existant</p>
 
