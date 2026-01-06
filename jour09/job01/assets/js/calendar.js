@@ -1,9 +1,5 @@
 // Récupération de l'utilisateur connecté
 const user = JSON.parse(sessionStorage.getItem("currentUser"));
-// Protection d'une page
-if (!user) {
-    window.location.href = "login.html";
-}
 
 // Initialisation du calendrier
 let calendar;
@@ -11,6 +7,30 @@ let eventModal;
 let selectedInfo = null;
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Protection d'une page - vérifier après le chargement du DOM
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Afficher les informations de l'utilisateur dans la navbar
+    const userInfo = document.getElementById('userInfo');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (user) {
+        userInfo.textContent = `Bienvenue, ${user.prenom || user.email}`;
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+    }
+
+    // Gérer la déconnexion
+    logoutBtn.addEventListener('click', function() {
+        if (confirm('Voulez-vous vraiment vous déconnecter ?')) {
+            sessionStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    });
     const calendarEl = document.getElementById('calendar');
     
     // Initialisation du modal Bootstrap

@@ -2,25 +2,117 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Authentification - La Plateforme</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/style/style.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-    <button> <a type="button" href="login.html">Connexion</a> </button>
-    <button> <a type="button" href="register.html">Inscription</a> </button>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <div class="container-fluid">
+                        <a class="navbar-brand" href="index.html">La Plateforme</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav ms-auto">
+                                        <li class="nav-item">
+                                                <span class="navbar-text text-white me-3" id="userInfo"></span>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="btn btn-outline-light btn-sm me-2" href="calendar.html"
+                                                        id="calendarBtn">Calendrier</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <button class="btn btn-outline-light btn-sm" id="logoutBtn"
+                                                        style="display: none;">Déconnexion</button>
+                                        </li>
+                                </ul>
+                        </div>
+                </div>
+        </nav>
 
+        <div class="content-wrapper">
+                <h1 class="main-title">La Plateforme</h1>
 
+                <div class="auth-container">
+                        <!-- Carte Inscription à gauche -->
+                        <div class="auth-card">
+                                <h2>Inscription</h2>
+                                <p>Créez votre compte pour accéder à la plateforme</p>
 
+                                <form method="POST" id="register-form">
+                                        <div class="mb-4">
+                                                <label for="register-prenom" class="form-label">Prénom</label>
+                                                <input type="text" id="register-prenom" name="prenom"
+                                                        class="form-control" placeholder="Votre prénom" required>
+                                        </div>
 
+                                        <div class="mb-4">
+                                                <label for="register-nom" class="form-label">Nom</label>
+                                                <input type="text" id="register-nom" name="nom" class="form-control"
+                                                        placeholder="Votre nom" required>
+                                        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/utils.js"></script>
+                                        <div class="mb-4">
+                                                <label for="register-email" class="form-label">Email</label>
+                                                <input type="email" id="register-email" name="email"
+                                                        class="form-control" placeholder="exemple@email.com" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                                <label for="register-password" class="form-label">Mot de passe</label>
+                                                <input type="password" id="register-password" name="password"
+                                                        class="form-control" placeholder="••••••••" required>
+                                        </div>
+
+                                        <button type="submit" class="btn-auth btn-secondary-auth">
+                                                Créer mon compte
+                                        </button>
+                                </form>
+                        </div>
+
+                        <!-- Carte Connexion à droite -->
+                        <div class="auth-card">
+                                <h2>Connexion</h2>
+                                <p>Connectez-vous à votre compte existant</p>
+
+                                <form method="POST" id="login-form">
+                                        <div class="mb-4">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input type="email" id="email" name="email" class="form-control"
+                                                        placeholder="exemple@email.com" required>
+                                        </div>
+
+                                        <div class="mb-4">
+                                                <label for="password" class="form-label">Mot de passe</label>
+                                                <input type="password" id="password" name="password"
+                                                        class="form-control" placeholder="••••••••" required>
+                                        </div>
+
+                                        <button type="submit" class="btn-auth btn-primary-auth">
+                                                Se connecter
+                                        </button>
+                                </form>
+                        </div>
+                </div>
+        </div>
+
+        <footer>
+                <p>&copy; 2026 La Plateforme. Tous droits réservés à Maître Ely VII. </p>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/utils.js"></script>
+        <script src="assets/js/auth.js"></script>
+
 </body>
 
 </html>
