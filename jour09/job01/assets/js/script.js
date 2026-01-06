@@ -22,44 +22,41 @@
 // // Appeler la fonction
 // loadUsers();
 
-async function loadUsers() {
-try {
-const response = await fetch("data/users.json");
-const users = await response.json();
-return users;
-} catch (error) {
-console.error("Erreur de chargement:", error);
-return [];
-}
-}
-
-// Rechercher un utilisateur par email
-const user = users.find(u => u.email === "john@laplateforme.io");
-
-// Sauvegarde
-localStorage.setItem("users", JSON.stringify(users));
-// Chargement
-const users = JSON.parse(localStorage.getItem("users")) || [];
+// async function loadUsers() {
+//     try {
+//         const response = await fetch("assets/data/users.json");
+//         const users = await response.json();
+//         localStorage.setItem("users", JSON.stringify(users))
+//         return users;
+//     } catch (error) {
+//         console.error("Erreur de chargement:", error);
+//         return [];
+//     }
+// }
 
 
-function isValidEmail(email) {
-const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-return regex.test(email);
-}
 
 
-function isLaPlateformeEmail(email) {
-return email.endsWith("@laplateforme.io");
-}
-// Validation complète
-if (!isValidEmail(email)) {
-alert("Format d'email invalide");
-return;
-}
-if (!isLaPlateformeEmail(email)) {
-alert("Seuls les emails @laplateforme.io sont acceptés");
-return;
-}
+// function isValidEmail(email) {
+//     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return regex.test(email);
+// }
+
+
+// function isLaPlateformeEmail(email) {
+//     return email.endsWith("@laplateforme.io");
+// }
+// // Validation complète
+// // if (!isValidEmail(email)) {
+// //     alert("Format d'email invalide");
+// //     return;
+// // }
+// // if (!isLaPlateformeEmail(email)) {
+// //     alert("Seuls les emails @laplateforme.io sont acceptés");
+// //     return;
+// // }
+
+// loadUsers();
 
 
 
