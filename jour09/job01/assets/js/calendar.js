@@ -19,11 +19,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const userInfo = document.getElementById('userInfo');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const adminBtn = document.getElementById('adminBtn');
     
     if (user) {
         userInfo.textContent = `Bienvenue, ${user.prenom || user.email}`;
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
+        
+        // Afficher le bouton admin seulement si l'utilisateur est admin
+        if (user.role === 'admin' && adminBtn) {
+            adminBtn.style.display = 'inline-block';
+        }
     }
 
     // Gérer la déconnexion
@@ -151,26 +157,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Fonction pour sauvegarder les événements dans le localStorage
-function saveEventsToStorage() {
-    const events = calendar.getEvents().map(event => ({
-        title: event.title,
-        start: event.start.toISOString(),
-        end: event.end ? event.end.toISOString() : null,
-        allDay: event.allDay
-    }));
+// // Fonction pour sauvegarder les événements dans le localStorage
+// function saveEventsToStorage() {
+//     const events = calendar.getEvents().map(event => ({
+//         title: event.title,
+//         start: event.start.toISOString(),
+//         end: event.end ? event.end.toISOString() : null,
+//         allDay: event.allDay
+//     }));
     
-    localStorage.setItem(`calendar_events_${user.email}`, JSON.stringify(events));
-}
+//     localStorage.setItem(`calendar_events_${user.email}`, JSON.stringify(events));
+// }
 
-// Fonction pour charger les événements depuis le localStorage
-function loadEventsFromStorage() {
-    const storedEvents = localStorage.getItem(`calendar_events_${user.email}`);
+// // Fonction pour charger les événements depuis le localStorage
+// function loadEventsFromStorage() {
+//     const storedEvents = localStorage.getItem(`calendar_events_${user.email}`);
     
-    if(storedEvents) {
-        const events = JSON.parse(storedEvents);
-        events.forEach(event => {
-            calendar.addEvent(event);
-        });
-    }
-}
+//     if(storedEvents) {
+//         const events = JSON.parse(storedEvents);
+//         events.forEach(event => {
+//             calendar.addEvent(event);
+//         });
+//     }
+// }
