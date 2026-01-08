@@ -50,10 +50,9 @@ function afficherHorloge() {
     // Récupère l'heure actuelle (0-23, format 24h)
     const hours = time.getHours();
     
-    // Convertit l'heure en format 12h (0-11)
-    // % 12 donne le reste de la division par 12
-    // Ex: 13 % 12 = 1, 15 % 12 = 3
-    const hoursForClock = hours % 12;
+    // Pour l'horloge 24h, on utilise directement les heures (0-23)
+    // Pas de conversion nécessaire, on garde le format 24h
+    const hoursForClock = hours;
     
     // Récupère les minutes actuelles (0-59)
     const minutes = time.getMinutes();
@@ -67,8 +66,9 @@ function afficherHorloge() {
     
     // Met à jour la rotation de l'aiguille des heures
     // translate(-50%, -100%) centre l'aiguille sur son pivot
-    // scale() convertit les heures (0-11) en degrés de rotation (0-360)
-    hourEl.style.transform = `translate(-50%, -100%) rotate(${scale(hoursForClock, 0, 11, 0, 360)}deg)`;
+    // scale() convertit les heures (0-23) en degrés de rotation (0-360)
+    // L'aiguille fait un tour complet en 24h au lieu de 12h
+    hourEl.style.transform = `translate(-50%, -100%) rotate(${scale(hoursForClock, 0, 23, 0, 360)}deg)`;
     
     // Met à jour la rotation de l'aiguille des minutes
     // scale() convertit les minutes (0-59) en degrés de rotation (0-360)
@@ -82,12 +82,12 @@ function afficherHorloge() {
     // MISE À JOUR DE L'AFFICHAGE NUMÉRIQUE
     // ============================================
     
-    // Affiche l'heure en format texte (ex: "3:45 PM")
+    // Affiche l'heure en format 24h (ex: "15:45" ou "03:05")
     // ${expression} est un template literal qui permet d'insérer des variables dans une chaîne
-    // hoursForClock === 0 ? 12 : hoursForClock convertit 0 en 12 pour afficher minuit comme "12:00"
-    // minutes < 10 ? `0${minutes}` : minutes ajoute un zéro devant les minutes < 10 (ex: 3:05)
-    // hours >= 12 ? 'PM' : 'AM' affiche PM pour l'après-midi, AM pour le matin
-    timeEl.textContent = `${hoursForClock === 0 ? 12 : hoursForClock}:${minutes < 10 ? `0${minutes}` : minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
+    // hours < 10 ? `0${hours}` : hours ajoute un zéro devant les heures < 10 (ex: 03:45)
+    // minutes < 10 ? `0${minutes}` : minutes ajoute un zéro devant les minutes < 10 (ex: 15:05)
+    // Pas de AM/PM en format 24h
+    timeEl.textContent = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
     
     // Affiche la date complète (ex: "Lundi, Jan 8")
     // days[day] récupère le nom du jour depuis le tableau days
