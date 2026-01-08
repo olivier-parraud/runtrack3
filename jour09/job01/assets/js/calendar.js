@@ -117,19 +117,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const endTime = document.getElementById('eventEndTime').value;
         
         if(title && startDate && startTime && endDate && endTime) {
-            // Créer l'événement
+            // Créer l'événement avec statut pending pour les users normaux
             const event = {
                 title: title,
                 start: `${startDate}T${startTime}`,
                 end: `${endDate}T${endTime}`,
-                allDay: false
+                allDay: false,
+                status: 'pending', // En attente d'approbation
+                proposedBy: user.email,
+                proposedByName: user.prenom || user.email
             };
             
-            // Ajouter au calendrier
-            calendar.addEvent(event);
-            
-            // Sauvegarder dans localStorage
-            saveEventsToStorage();
+            // Sauvegarder la proposition
+            savePendingEvent(event);
             
             // Fermer le modal
             eventModal.hide();
@@ -141,6 +141,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if(selectedInfo) {
                 calendar.unselect();
             }
+            
+            // Informer l'utilisateur
+            alert('Votre proposition de rendez-vous a été envoyée à l\'administrateur pour validation.');
         } else {
             alert('Veuillez remplir tous les champs');
         }
@@ -157,26 +160,60 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// // Fonction pour sauvegarder les événements dans le localStorage
-// function saveEventsToStorage() {
-//     const events = calendar.getEvents().map(event => ({
-//         title: event.title,
-//         start: event.start.toISOString(),
-//         end: event.end ? event.end.toISOString() : null,
-//         allDay: event.allDay
-//     }));
+// Fonction pour sauvegarder les événements dans le localStorage
+function saveEventsToStorage() {
+    // Cette fonction met à jour les événements dans admin_events après un drag/drop
+    const calendarEvents = calendar.getEvents();
+    const adminEvents = JSON.parse(localStorage.getItem('admin_events') || '[]');
     
-//     localStorage.setItem(`calendar_events_${user.email}`, JSON.stringify(events));
-// }
+    // Mettre à jour les dates des événements qui ont été déplacés
+    calendarEvents.forEach(calEvent => {
+        const existingEvent = adminEvents.find(e => e.id === calEvent.id);
+        if(existingEvent) {
+            existingEvent.start = calEvent.start.toISOString();
+            existingEvent.end = calEvent.end ? calEvent.end.toISOString() : calEvent.start.toISOString();
+        }
+    });
+    
+    localStorage.setItem('admin_events', JSON.stringify(adminEvents));
+}
 
-// // Fonction pour charger les événements depuis le localStorage
-// function loadEventsFromStorage() {
-//     const storedEvents = localStorage.getItem(`calendar_events_${user.email}`);
+// Fonction pour charger les événements depuis le localStorage
+function loadEventsFromStorage() {
+    // Charger les événements approuvés (visibles par tous)
+    const approvedEvents = localStorage.getItem('admin_events');
     
-//     if(storedEvents) {
-//         const events = JSON.parse(storedEvents);
-//         events.forEach(event => {
-//             calendar.addEvent(event);
-//         });
-//     }
-// }
+    if(approvedEvents) {
+        const events = JSON.parse(approvedEvents);
+        events.forEach(event => {
+            // Charger uniquement les événements avec statut approved
+            if(event.status === 'approved' || !event.status) {
+                calendar.addEvent({
+                    id: event.id,
+                    title: event.title,
+                    start: event.start,
+                    end: event.end,
+                    backgroundColor: event.color || '#0d6efd',
+                    borderColor: event.color || '#0d6efd',
+                    allDay: event.allDay || false
+                });
+            }
+        });
+    }
+}
+
+// Fonction pour sauvegarder une proposition d'événement
+function savePendingEvent(event) {
+    // Récupérer les propositions existantes
+    let pendingEvents = JSON.parse(localStorage.getItem('pending_events') || '[]');
+    
+    // Ajouter un ID unique
+    event.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    event.createdAt = new Date().toISOString();
+    
+    // Ajouter la nouvelle proposition
+    pendingEvents.push(event);
+    
+    // Sauvegarder
+    localStorage.setItem('pending_events', JSON.stringify(pendingEvents));
+}

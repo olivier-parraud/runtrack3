@@ -20,6 +20,7 @@ let deleteModal;
 let events = [];
 let currentEventId = null;
 let filteredEvents = [];
+let pendingEvents = [];
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Charger les événements
     loadEvents();
+    loadPendingEvents();
 
     // Initialiser le calendrier
     initializeCalendar();
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Afficher les événements
     displayEvents();
+    displayPendingEvents();
     updateStatistics();
 });
 
@@ -124,14 +127,17 @@ function loadEventsToCalendar() {
     if (calendar) {
         calendar.removeAllEvents();
         events.forEach(event => {
-            calendar.addEvent({
-                id: event.id,
-                title: event.title,
-                start: event.start,
-                end: event.end,
-                backgroundColor: event.color || "#0d6efd",
-                borderColor: event.color || "#0d6efd"
-            });
+            // Afficher uniquement les événements approuvés dans le calendrier
+            if(event.status === 'approved' || !event.status) {
+                calendar.addEvent({
+                    id: event.id,
+                    title: event.title,
+                    start: event.start,
+                    end: event.end,
+                    backgroundColor: event.color || "#0d6efd",
+                    borderColor: event.color || "#0d6efd"
+                });
+            }
         });
     }
 }
@@ -143,14 +149,17 @@ function displayEvents() {
     
     eventsList.innerHTML = '';
     
-    if (filteredEvents.length === 0) {
+    // Filtrer uniquement les événements approuvés pour l'affichage
+    const approvedEvents = filteredEvents.filter(e => e.status === 'approved' || !e.status);
+    
+    if (approvedEvents.length === 0) {
         noEvents.style.display = 'block';
         return;
     }
     
     noEvents.style.display = 'none';
     
-    filteredEvents.forEach(event => {
+    approvedEvents.forEach(event => {
         const startDate = new Date(event.start);
         const endDate = new Date(event.end);
         
@@ -267,7 +276,9 @@ function saveEvent() {
         start: start.toISOString(),
         end: end.toISOString(),
         description,
-        color
+        color,
+        status: 'approved', // Les événements créés par l'admin sont automatiquement approuvés
+        createdBy: user.email
     };
     
     if (eventId) {
@@ -279,6 +290,7 @@ function saveEvent() {
     } else {
         // Ajout
         eventData.id = generateId();
+        eventData.createdAt = new Date().toISOString();
         events.push(eventData);
     }
     
@@ -338,6 +350,11 @@ function updateStatistics() {
         return eventDate >= today && eventDate < weekLater;
     }).length;
     document.getElementById('weekEvents').textContent = weekCount;
+    
+    // Mettre à jour le compteur de propositions en attente
+    const pendingCount = pendingEvents.length;
+    document.getElementById('pendingEvents').textContent = pendingCount;
+    document.getElementById('pendingBadge').textContent = pendingCount;
 }
 
 // Rechercher des événements
@@ -441,4 +458,122 @@ function formatTimeInput(date) {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
+}
+
+// Charger les propositions en attente
+function loadPendingEvents() {
+    const stored = localStorage.getItem('pending_events');
+    if (stored) {
+        pendingEvents = JSON.parse(stored);
+    } else {
+        pendingEvents = [];
+    }
+}
+
+// Sauvegarder les propositions en attente
+function savePendingEvents() {
+    localStorage.setItem('pending_events', JSON.stringify(pendingEvents));
+}
+
+// Afficher les propositions en attente
+function displayPendingEvents() {
+    const pendingList = document.getElementById('pendingEventsList');
+    const noPending = document.getElementById('noPendingEvents');
+    
+    if (!pendingList) return;
+    
+    pendingList.innerHTML = '';
+    
+    if (pendingEvents.length === 0) {
+        noPending.style.display = 'block';
+        return;
+    }
+    
+    noPending.style.display = 'none';
+    
+    pendingEvents.forEach(event => {
+        const startDate = new Date(event.start);
+        const endDate = new Date(event.end);
+        const createdDate = new Date(event.createdAt);
+        
+        const eventCard = document.createElement('div');
+        eventCard.className = 'col-md-12 mb-3';
+        eventCard.innerHTML = `
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h5 class="card-title mb-1">${event.title}</h5>
+                            <p class="text-muted small mb-0">
+                                <i class="bi bi-person me-1"></i>Proposé par: <strong>${event.proposedByName}</strong>
+                            </p>
+                            <p class="text-muted small mb-0">
+                                <i class="bi bi-clock me-1"></i>Le ${formatDate(createdDate)} à ${formatTime(createdDate)}
+                            </p>
+                        </div>
+                        <span class="badge bg-warning text-dark">En attente</span>
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1"><i class="bi bi-calendar-event me-1"></i><strong>Date:</strong> ${formatDate(startDate)} à ${formatTime(startDate)} - ${formatDate(endDate)} à ${formatTime(endDate)}</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-success btn-sm" onclick="approveEvent('${event.id}')">
+                            <i class="bi bi-check-circle me-1"></i>Approuver
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="rejectEvent('${event.id}')">
+                            <i class="bi bi-x-circle me-1"></i>Rejeter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        pendingList.appendChild(eventCard);
+    });
+}
+
+// Approuver un événement
+function approveEvent(eventId) {
+    const event = pendingEvents.find(e => e.id === eventId);
+    if (!event) return;
+    
+    if (confirm(`Approuver le rendez-vous "${event.title}" proposé par ${event.proposedByName} ?`)) {
+        // Marquer comme approuvé
+        event.status = 'approved';
+        event.approvedBy = user.email;
+        event.approvedAt = new Date().toISOString();
+        
+        // Ajouter aux événements approuvés
+        events.push(event);
+        saveEvents();
+        
+        // Retirer des propositions en attente
+        pendingEvents = pendingEvents.filter(e => e.id !== eventId);
+        savePendingEvents();
+        
+        // Rafraîchir l'affichage
+        displayPendingEvents();
+        displayEvents();
+        loadEventsToCalendar();
+        updateStatistics();
+        
+        alert('Le rendez-vous a été approuvé et ajouté au planning.');
+    }
+}
+
+// Rejeter un événement
+function rejectEvent(eventId) {
+    const event = pendingEvents.find(e => e.id === eventId);
+    if (!event) return;
+    
+    if (confirm(`Rejeter le rendez-vous "${event.title}" proposé par ${event.proposedByName} ?`)) {
+        // Retirer des propositions en attente
+        pendingEvents = pendingEvents.filter(e => e.id !== eventId);
+        savePendingEvents();
+        
+        // Rafraîchir l'affichage
+        displayPendingEvents();
+        updateStatistics();
+        
+        alert('Le rendez-vous a été rejeté.');
+    }
 }
