@@ -86,8 +86,8 @@ function demarrerMinuteur() {
         if (tempsRestant <= 0) {
             // Arrête le minuteur
             arreterMinuteur();
-            // Affiche un message d'alerte à l'utilisateur
-            alert("Temps écoulé !");
+            // Lance le son d'alerte
+            triggerBirdAlert("Temps écoulé !");
         }
     }, 1000); // Exécute toutes les 1000 millisecondes (1 seconde)
 }
@@ -212,3 +212,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialise les aiguilles à leur position de départ
     updateClockNeedles();
 });
+
+function triggerBirdAlert(message) {
+    const sound = document.getElementById('coucou-sound');
+
+    if (sound) {
+        sound.pause();
+        sound.currentTime = 0;
+       
+        let repetitions = 0;
+
+        // fonction pour jouer le son qui se répète
+        const playCoucou = () => {
+            if (repetitions < 2) {
+                // Ici j’ai demandé à l’IA comment faire car le son n’était pas fluide avec la répétition car le temps de chargement est plus long que l’affichage : On clone le nœud audio pour éviter que les sons se chevauchent ou se coupent
+                // C'est l'astuce ultime pour un son fluide !
+                const soundClone = sound.cloneNode();
+                soundClone.play().catch(e => console.log("Erreur lecture"));
+                repetitions++;
+            } else {
+                clearInterval(intervalSon);
+            }
+        };
+
+        // On lance le premier cri
+        playCoucou();
+
+        // On lance l'intervalle pour les suivants
+        const intervalSon = setInterval(playCoucou, 1200);
+    }
+}

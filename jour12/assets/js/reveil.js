@@ -176,19 +176,91 @@ function verifierReveil() {
     // === vérifie l'égalité stricte (valeur et type)
     // && signifie "ET" logique (les deux conditions doivent être vraies)
     if (heureActuelle === heureReveil && minuteActuelle === minuteReveil) {
+        // Désactive le réveil immédiatement pour éviter de sonner plusieurs fois
+        reveilActif = false;
         // Si l'heure correspond, on fait sonner le réveil
         sonnerReveil();
     }
 }
 
+// Variable globale pour stocker l'intervalle de la musique
+let intervalSonGlobal = null;
+// Variable globale pour stocker les clones audio en cours de lecture
+let audioClones = [];
+
+// ============================================
+// FONCTION: triggerBirdAlert
+// ============================================
+// Lance la musique d'alerte
+function triggerBirdAlert(message) {
+    const sound = document.getElementById('coucou-sound');
+
+    if (sound) {
+        sound.pause();
+        sound.currentTime = 0;
+       
+        let repetitions = 0;
+
+        // Affiche le bouton stop
+        document.getElementById('btnStopMusique').style.display = 'inline-block';
+
+        // fonction pour jouer le son une seule fois
+        const playCoucou = () => {
+            if (repetitions < 1) {
+                const soundClone = sound.cloneNode();
+                audioClones.push(soundClone); // Stocke le clone pour pouvoir l'arrêter plus tard
+                soundClone.play().catch(e => console.log("Erreur lecture"));
+                repetitions++;
+            } else {
+                clearInterval(intervalSonGlobal);
+                intervalSonGlobal = null;
+            }
+        };
+
+        // On lance le premier cri
+        playCoucou();
+
+        // On lance l'intervalle pour les suivants
+        intervalSonGlobal = setInterval(playCoucou, 1200);
+    }
+}
+
+// ============================================
+// FONCTION: stopperMusique
+// ============================================
+// Arrête la musique immédiatement
+function stopperMusique() {
+    // Arrête l'intervalle s'il existe
+    if (intervalSonGlobal !== null) {
+        clearInterval(intervalSonGlobal);
+        intervalSonGlobal = null;
+    }
+    
+    // Arrête tous les sons audio en cours
+    const sound = document.getElementById('coucou-sound');
+    if (sound) {
+        sound.pause();
+        sound.currentTime = 0;
+    }
+    
+    // Arrête tous les clones audio stockés
+    audioClones.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+    audioClones = []; // Vide le tableau
+    
+    // Cache le bouton stop
+    document.getElementById('btnStopMusique').style.display = 'none';
+}
+
 // ============================================
 // FONCTION: sonnerReveil
 // ============================================
-// Fait sonner le réveil en affichant une alerte
+// Fait sonner le réveil en lançant la musique
 function sonnerReveil() {
-    // Affiche une boîte de dialogue avec le message de réveil
-    // alert() bloque l'exécution du code jusqu'à ce que l'utilisateur clique sur OK
-    alert("⏰ RÉVEIL ! Il est " + formatNumber(heureReveil) + ":" + formatNumber(minuteReveil));
+    // Lance le son d'alerte
+    triggerBirdAlert("⏰ RÉVEIL ! Il est " + formatNumber(heureReveil) + ":" + formatNumber(minuteReveil));
     
     // Désactive automatiquement le réveil après qu'il ait sonné
     desactiverReveil();
@@ -227,4 +299,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // addEventListener("click", fonction) exécute la fonction quand on clique sur l'élément
     // toggleReveil sera appelée à chaque clic sur le bouton
     document.getElementById('btnToggleReveil').addEventListener('click', toggleReveil);
+    
+    // Ajoute un écouteur d'événement au bouton stop musique
+    document.getElementById('btnStopMusique').addEventListener('click', stopperMusique);
 });
+
